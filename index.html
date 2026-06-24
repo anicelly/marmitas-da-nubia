@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marmitas da Núbia | Comida com Afeto</title>
+  <link rel="icon" type="image/png" href="assets/logo-nubia.png" />
+  <link rel="apple-touch-icon" href="assets/logo-nubia.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#d7654e" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;500;600;700;800&family=Parisienne&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-hero">
+    <nav class="topbar">
+      <div class="brand">
+        <div class="brand-mark" id="brandMark">
+          <img src="assets/logo-nubia.png" alt="Logo Núbia Marmitas" />
+        </div>
+        <div>
+          <h1>Marmitas da Núbia</h1>
+          <span class="brand-subtitle">Deliciosa • Caseira</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <label class="logo-loader">
+          Alterar logo
+          <input id="logoInput" type="file" accept="image/*" />
+        </label>
+        <button class="ghost" type="button" onclick="exportarBackup()">Exportar dados</button>
+      </div>
+    </nav>
+
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <span class="pill">Comida com afeto, sabor de casa e cuidado em cada detalhe</span>
+        <h2>Marmitas caseiras feitas para transformar a rotina em um momento mais gostoso.</h2>
+        <p>A Núbia prepara refeições deliciosas, bem servidas e organizadas para quem quer praticidade sem abrir mão de comida de verdade.</p>
+        <div class="hero-actions">
+          <button class="primary-link" type="button" onclick="trocarAba('loja')">Comprar marmita</button>
+          <button class="secondary-link" type="button" onclick="gerarResumoWhatsApp()">Resumo do dia</button>
+        </div>
+      </div>
+
+      <aside class="brand-showcase">
+        <img src="assets/logo-nubia.png" alt="Logo Núbia Marmitas" />
+        <div>
+          <span class="panel-label">Nossa essência</span>
+          <ul>
+            <li>Comida caseira com gostinho de afeto</li>
+            <li>Marmitas bem servidas e feitas com capricho</li>
+            <li>Cardápio da semana para facilitar sua rotina</li>
+            <li>Pedidos pelo WhatsApp de um jeito simples</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </header>
+
+  <main class="container">
+    <div id="orderToast" class="order-toast hidden">
+      <div>
+        <span>Novo pedido recebido</span>
+        <strong id="orderToastTitle">Marmitas da Núbia</strong>
+      </div>
+      <button type="button" onclick="trocarAba('pedidos')">Ver pedido</button>
+    </div>
+
+    <section class="metrics-grid" aria-label="Resumo operacional">
+      <article class="metric-card">
+        <span>Pedidos</span>
+        <strong id="totalPedidos">0</strong>
+        <small id="pedidosHoje">0 para hoje</small>
+      </article>
+      <article class="metric-card">
+        <span>Marmitas</span>
+        <strong id="totalMarmitas">0</strong>
+        <small id="marmitasHoje">0 para hoje</small>
+      </article>
+      <article class="metric-card">
+        <span>Faturamento</span>
+        <strong id="faturamento">R$ 0,00</strong>
+        <small id="ticketMedio">Ticket médio R$ 0,00</small>
+      </article>
+      <article class="metric-card warning">
+        <span>Pendências</span>
+        <strong id="pendencias">0</strong>
+        <small>pagamentos ou compras</small>
+      </article>
+    </section>
+
+    <section class="workspace">
+      <aside class="sidebar">
+        <span class="nav-label">Cliente</span>
+        <button class="tab" type="button" data-tab="loja">Comprar</button>
+        <span class="nav-label">Gestão</span>
+        <button class="tab active" type="button" data-tab="painel">Painel</button>
+        <button class="tab" type="button" data-tab="pedidos">Pedidos</button>
+        <button class="tab" type="button" data-tab="clientes">Clientes</button>
+        <button class="tab" type="button" data-tab="cardapio">Cardápio</button>
+        <button class="tab" type="button" data-tab="financeiro">Financeiro</button>
+        <details class="sidebar-more">
+          <summary>Mais áreas</summary>
+          <button class="tab" type="button" data-tab="pratos">Pratos</button>
+          <button class="tab" type="button" data-tab="entregas">Entregas</button>
+          <button class="tab" type="button" data-tab="compras">Compras</button>
+          <button class="tab" type="button" data-tab="cotacao">Cotação IA</button>
+          <button class="tab" type="button" data-tab="automacoes">Automações</button>
+          <button class="tab" type="button" data-tab="admin">Admin Núbia</button>
+        </details>
+      </aside>
+
+      <div class="content">
+        <section id="loja" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Peça sua marmita</span>
+              <h2>Cardápio para clientes</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="limparCarrinho()">Limpar carrinho</button>
+          </div>
+
+          <div class="shop-link-card">
+            <div>
+              <span class="eyebrow">Link profissional</span>
+              <strong id="linkPedidoCliente">/loja</strong>
+              <small>Envie esse link para o cliente fazer o pedido direto pelo cardápio.</small>
+            </div>
+            <button type="button" onclick="copiarLinkPedido()">Copiar link</button>
+          </div>
+
+          <div class="customer-shop">
+            <div>
+              <div class="week-menu-client">
+                <div class="section-header compact-header">
+                  <div>
+                    <span class="eyebrow">Opções da semana</span>
+                    <h3>Escolha pelo dia do cardápio</h3>
+                  </div>
+                </div>
+                <div id="opcoesSemanaCliente" class="week-options"></div>
+              </div>
+              <div id="vitrineCliente" class="store-grid"></div>
+            </div>
+            <aside class="cart-panel">
+              <h3>Seu pedido</h3>
+              <div id="carrinhoCliente" class="cart-list"></div>
+              <form id="formCheckoutCliente" class="checkout-form">
+                <label>Seu nome
+                  <input id="checkoutNome" placeholder="Digite seu nome" required />
+                </label>
+                <label>WhatsApp
+                  <input id="checkoutTelefone" placeholder="Ex.: 61999999999" required />
+                </label>
+                <label>Como prefere receber?
+                  <select id="checkoutRecebimento">
+                    <option value="Retirar com Núbia">Retirar com Núbia</option>
+                    <option value="Prefiro que a Núbia me entregue">Prefiro que a Núbia me entregue</option>
+                  </select>
+                </label>
+                <label>Pagamento
+                  <select id="checkoutPagamento">
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Cartão de débito">Cartão de débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                  </select>
+                </label>
+                <label>Data desejada
+                  <input id="checkoutData" type="date" required />
+                </label>
+                <label>Observação
+                  <input id="checkoutObs" placeholder="Ex.: sem cebola, entregar à noite" />
+                </label>
+                <button class="primary" type="submit">Finalizar pedido</button>
+              </form>
+            </aside>
+          </div>
+          <div id="comprovantePedido" class="receipt-card hidden"></div>
+        </section>
+
+        <section id="painel" class="tab-page active">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Hoje</span>
+              <h2>Central do dia</h2>
+            </div>
+            <input id="filtroData" type="date" />
+          </div>
+
+          <div class="split">
+            <article class="panel">
+              <h3>Produção programada</h3>
+              <div id="producaoSemana" class="empty-state">Nenhum pedido encontrado para a data selecionada.</div>
+            </article>
+            <article class="panel">
+              <h3>Próximas ações</h3>
+              <div id="alertasOperacao" class="alert-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="pedidos" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Vendas</span>
+              <h2>Novo pedido</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="exportarPedidosCsv()">Exportar CSV</button>
+          </div>
+
+          <form id="novoPedido" class="form-grid">
+            <label>Cliente
+              <input id="cliente" placeholder="Ex.: Maria Souza" required />
+            </label>
+            <label>Telefone
+              <input id="telefone" placeholder="Ex.: 11999999999" />
+            </label>
+            <label>Marmita
+              <input id="marmita" list="opcoesCardapio" placeholder="Ex.: Frango grelhado" required />
+              <datalist id="opcoesCardapio"></datalist>
+            </label>
+            <label>Quantidade
+              <input id="quantidade" type="number" min="1" value="1" required />
+            </label>
+            <label>Valor unitário
+              <input id="valorUnitario" type="number" min="0" step="0.01" placeholder="Ex.: 18,00" />
+            </label>
+            <label>Entrega
+              <input id="dataEntrega" type="date" required />
+            </label>
+            <label>Forma de recebimento
+              <select id="formaRecebimento">
+                <option value="Retirar com Núbia">Retirar com Núbia</option>
+                <option value="Prefiro que a Núbia me entregue">Prefiro que a Núbia me entregue</option>
+              </select>
+            </label>
+            <label>Forma de pagamento
+              <select id="formaPagamento">
+                <option value="Pix">Pix</option>
+                <option value="Cartão de crédito">Cartão de crédito</option>
+                <option value="Cartão de débito">Cartão de débito</option>
+                <option value="Dinheiro">Dinheiro</option>
+              </select>
+            </label>
+            <label>Status
+              <select id="status">
+                <option value="Pendente">Pendente</option>
+                <option value="Pago">Pago</option>
+                <option value="Entregue">Entregue</option>
+              </select>
+            </label>
+            <label>Observações
+              <input id="observacao" placeholder="Ex.: sem cebola, retirar às 12h" />
+            </label>
+            <button class="primary span-2" type="submit">Adicionar pedido</button>
+          </form>
+
+          <div class="toolbar">
+            <input id="buscaPedidos" placeholder="Buscar cliente, telefone ou marmita" />
+            <select id="filtroStatus">
+              <option value="Todos">Todos os status</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Pago">Pago</option>
+              <option value="Entregue">Entregue</option>
+            </select>
+          </div>
+
+          <div id="listaPedidos" class="order-list"></div>
+        </section>
+
+        <section id="clientes" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Relacionamento</span>
+              <h2>Clientes ativos e retomada</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="gerarSaudadesWhatsApp()">Ver retomadas</button>
+          </div>
+
+          <form id="formCliente" class="form-grid">
+            <label>Nome
+              <input id="clienteNome" placeholder="Ex.: Ana Paula" required />
+            </label>
+            <label>Telefone
+              <input id="clienteTelefone" placeholder="Ex.: 11999999999" required />
+            </label>
+            <label>Preferência
+              <input id="clientePreferencia" placeholder="Ex.: frango, low carb, sem cebola" />
+            </label>
+            <label>Aniversário
+              <input id="clienteAniversario" type="date" />
+            </label>
+            <label class="span-2">Observações
+              <input id="clienteObservacao" placeholder="Ex.: prefere entrega na sexta à noite" />
+            </label>
+            <button class="primary span-2" type="submit">Cadastrar cliente</button>
+          </form>
+
+          <div class="toolbar">
+            <input id="buscaClientes" placeholder="Buscar cliente, telefone ou preferência" />
+            <select id="filtroClientes">
+              <option value="Todos">Todos os clientes</option>
+              <option value="Ativos">Ativos</option>
+              <option value="Retomar">Sem pedido há 25 dias</option>
+            </select>
+          </div>
+
+          <div class="relationship-summary">
+            <article>
+              <strong id="clientesAtivos">0</strong>
+              <span>ativos</span>
+            </article>
+            <article>
+              <strong id="clientesSaudade">0</strong>
+              <span>para retomar</span>
+            </article>
+            <article>
+              <strong id="clientesTotal">0</strong>
+              <span>cadastrados</span>
+            </article>
+          </div>
+
+          <div id="listaClientes" class="order-list"></div>
+        </section>
+
+        <section id="pratos" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Catálogo</span>
+              <h2>Pratos, preços e fotos</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="popularPratosExemplo()">Carregar sugestões</button>
+          </div>
+
+          <form id="formPrato" class="form-grid">
+            <input id="pratoEditId" type="hidden" />
+            <label>Nome do prato
+              <input id="pratoNome" placeholder="Ex.: Frango cremoso com legumes" required />
+            </label>
+            <label>Categoria
+              <select id="pratoCategoria">
+                <option value="Tradicional">Tradicional</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Low carb">Low carb</option>
+                <option value="Especial">Especial</option>
+              </select>
+            </label>
+            <label>Preço de venda
+              <input id="pratoPreco" type="number" min="0" step="0.01" placeholder="Ex.: 18,00" required />
+            </label>
+            <label>Custo estimado
+              <input id="pratoCusto" type="number" min="0" step="0.01" placeholder="Ex.: 9,50" />
+            </label>
+            <label class="span-2">Foto do prato
+              <input id="pratoFoto" placeholder="URL da foto ou deixe em branco para foto automática" />
+            </label>
+            <label class="span-2">Descrição de venda
+              <input id="pratoDescricao" placeholder="Ex.: arroz soltinho, feijão caseiro, frango suculento e legumes frescos" />
+            </label>
+            <label>Disponibilidade
+              <select id="pratoStatus">
+                <option value="Disponível">Disponível</option>
+                <option value="Indisponível">Indisponível</option>
+              </select>
+            </label>
+            <button class="primary" type="submit">Salvar prato</button>
+            <button class="ghost" type="button" onclick="cancelarEdicaoPrato()">Cancelar edição</button>
+          </form>
+
+          <div id="listaPratos" class="dish-list"></div>
+        </section>
+
+        <section id="cardapio" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Oferta semanal</span>
+              <h2>Cardápio da semana</h2>
+            </div>
+            <div class="section-actions">
+              <button class="ghost compact" type="button" onclick="enviarCardapioWhatsApp()">Enviar no WhatsApp</button>
+              <button class="ghost compact" type="button" onclick="baixarCardapioPdf()">Baixar PDF</button>
+            </div>
+          </div>
+
+          <form id="formCardapio" class="menu-grid">
+            <label>Segunda-feira<select id="segunda"></select></label>
+            <label>Foto de segunda<input id="fotoSegunda" placeholder="URL da foto ou deixe automático" /></label>
+            <label>Terça-feira<select id="terca"></select></label>
+            <label>Foto de terça<input id="fotoTerca" placeholder="URL da foto ou deixe automático" /></label>
+            <label>Quarta-feira<select id="quarta"></select></label>
+            <label>Foto de quarta<input id="fotoQuarta" placeholder="URL da foto ou deixe automático" /></label>
+            <label>Quinta-feira<select id="quinta"></select></label>
+            <label>Foto de quinta<input id="fotoQuinta" placeholder="URL da foto ou deixe automático" /></label>
+            <label>Sexta-feira<select id="sexta"></select></label>
+            <label>Foto de sexta<input id="fotoSexta" placeholder="URL da foto ou deixe automático" /></label>
+            <button class="primary" type="submit">Salvar cardápio</button>
+          </form>
+
+          <div id="cardapioSalvo" class="menu-preview"></div>
+          <div id="cardapioPdf" class="menu-pdf" aria-label="Prévia do cardápio em PDF"></div>
+        </section>
+
+        <section id="entregas" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Roteiro do dia</span>
+              <h2>Preparos e entregas</h2>
+            </div>
+            <input id="filtroEntregaData" type="date" />
+          </div>
+
+          <div class="delivery-board">
+            <article>
+              <h3>Preparando</h3>
+              <div id="entregasPreparando" class="order-list"></div>
+            </article>
+            <article>
+              <h3>Pronto</h3>
+              <div id="entregasPronto" class="order-list"></div>
+            </article>
+            <article>
+              <h3>Entregue</h3>
+              <div id="entregasEntregue" class="order-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="financeiro" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Resultado</span>
+              <h2>Financeiro simples</h2>
+            </div>
+            <select id="periodoFinanceiro">
+              <option value="dia">Hoje</option>
+              <option value="semana">Semana</option>
+              <option value="mes">Mês</option>
+              <option value="todos">Tudo</option>
+            </select>
+          </div>
+
+          <section class="finance-grid">
+            <article class="metric-card">
+              <span>Receita</span>
+              <strong id="receitaPeriodo">R$ 0,00</strong>
+              <small>pedidos do período</small>
+            </article>
+            <article class="metric-card">
+              <span>Em aberto</span>
+              <strong id="valorAberto">R$ 0,00</strong>
+              <small>pedidos pendentes</small>
+            </article>
+            <article class="metric-card">
+              <span>Custo estimado</span>
+              <strong id="custoPeriodo">R$ 0,00</strong>
+              <small>baseado nos pratos</small>
+            </article>
+            <article class="metric-card warning">
+              <span>Lucro estimado</span>
+              <strong id="lucroPeriodo">R$ 0,00</strong>
+              <small>receita menos custos e despesas</small>
+            </article>
+          </section>
+
+          <section class="payment-grid">
+            <article><span>Pix</span><strong id="totalPix">R$ 0,00</strong></article>
+            <article><span>Crédito</span><strong id="totalCredito">R$ 0,00</strong></article>
+            <article><span>Débito</span><strong id="totalDebito">R$ 0,00</strong></article>
+            <article><span>Dinheiro</span><strong id="totalDinheiro">R$ 0,00</strong></article>
+          </section>
+
+          <form id="formDespesa" class="inline-form">
+            <input id="despesaDescricao" placeholder="Despesa: embalagem, gás, mercado..." required />
+            <input id="despesaValor" type="number" min="0" step="0.01" placeholder="Valor" required />
+            <input id="despesaData" type="date" required />
+            <button class="primary" type="submit">Adicionar despesa</button>
+          </form>
+
+          <div id="listaDespesas" class="shopping-list"></div>
+        </section>
+
+        <section id="compras" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Estoque</span>
+              <h2>Lista de compras</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="enviarComprasWhatsApp()">Enviar compras</button>
+          </div>
+
+          <form id="formIngrediente" class="inline-form">
+            <input id="ingrediente" placeholder="Ingrediente ou embalagem" required />
+            <select id="situacaoIngrediente">
+              <option value="Falta comprar">Falta comprar</option>
+              <option value="Comprado">Comprado</option>
+            </select>
+            <button class="primary" type="submit">Adicionar</button>
+          </form>
+
+          <div id="listaIngredientes" class="shopping-list"></div>
+        </section>
+
+        <section id="cotacao" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Compras inteligentes</span>
+              <h2>Cotação IA por mercado</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="abrirPesquisasMercados()">Pesquisar ofertas</button>
+          </div>
+
+          <div class="ai-note">
+            <strong>Como funciona:</strong>
+            <span>Digite o item que quer comprar. A IA abre pesquisas direcionadas nos mercados da região e compara com o histórico salvo para apontar onde tende a valer mais a pena.</span>
+          </div>
+
+          <form id="formPesquisaPreco" class="form-grid smart-search">
+            <label>O que deseja pesquisar?
+              <input id="pesquisaItemPreco" placeholder="Ex.: peito de frango, patinho, tomate, alface" required />
+            </label>
+            <label>Região
+              <select id="pesquisaRegiaoPreco"></select>
+            </label>
+            <button class="primary span-2" type="submit">IA pesquisar melhores preços</button>
+          </form>
+
+          <div id="resultadoPesquisaPreco" class="quote-grid"></div>
+
+          <form id="formCotacao" class="form-grid">
+            <label>Item
+              <input id="cotacaoItem" placeholder="Ex.: peito de frango, tomate, cenoura" required />
+            </label>
+            <label>Categoria
+              <select id="cotacaoCategoria">
+                <option value="Proteína">Proteína</option>
+                <option value="Verdura">Verdura</option>
+                <option value="Legume">Legume</option>
+                <option value="Embalagem">Embalagem</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </label>
+            <label>Mercado
+              <select id="cotacaoMercado">
+                <option value="Atacadão DIA-A-DIA">Atacadão DIA-A-DIA</option>
+                <option value="Super Adega Atacadista">Super Adega Atacadista</option>
+                <option value="Vivendas">Vivendas</option>
+                <option value="Tatico">Tatico</option>
+              </select>
+            </label>
+            <label>Região
+              <select id="cotacaoRegiao"></select>
+            </label>
+            <label>Preço
+              <input id="cotacaoPreco" type="number" min="0" step="0.01" placeholder="Ex.: 16,90" required />
+            </label>
+            <label>Unidade
+              <select id="cotacaoUnidade">
+                <option value="kg">kg</option>
+                <option value="unidade">unidade</option>
+                <option value="maço">maço</option>
+                <option value="pacote">pacote</option>
+              </select>
+            </label>
+            <label>Data
+              <input id="cotacaoData" type="date" required />
+            </label>
+            <label>Fonte ou observação
+              <input id="cotacaoFonte" placeholder="Ex.: encarte, WhatsApp, visita à loja" />
+            </label>
+            <button class="primary span-2" type="submit">Salvar cotação</button>
+          </form>
+
+          <div class="quote-actions">
+            <button type="button" onclick="popularCotacoesExemplo()">Carregar itens base</button>
+            <button type="button" onclick="enviarListaCotacaoWhatsApp()">Enviar lista inteligente</button>
+            <button type="button" onclick="analisarPromocoes()">Analisar promoções</button>
+            <button type="button" onclick="mapearOfertasDoDia()">Mapear ofertas reais do dia</button>
+          </div>
+
+          <div id="ofertasReaisDia" class="quote-grid"></div>
+          <section class="promo-summary">
+            <article>
+              <span>Economia estimada</span>
+              <strong id="economiaCotacao">R$ 0,00</strong>
+              <small>comparado à compra anterior</small>
+            </article>
+            <article>
+              <span>Melhor dia</span>
+              <strong id="melhorDiaCompra">-</strong>
+              <small>pelo histórico cadastrado</small>
+            </article>
+            <article>
+              <span>Oportunidades</span>
+              <strong id="totalPromocoes">0</strong>
+              <small>itens abaixo do preço anterior</small>
+            </article>
+          </section>
+
+          <div id="alertasPromocao" class="alert-list"></div>
+          <div id="recomendacoesCotacao" class="quote-grid"></div>
+          <div id="listaCotacoes" class="shopping-list"></div>
+        </section>
+
+        <section id="automacoes" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Rotina inteligente</span>
+              <h2>Automações para o dia a dia</h2>
+            </div>
+          </div>
+
+          <div class="automation-grid">
+            <article class="automation-card">
+              <h3>Confirmação de pedido</h3>
+              <p>Gera mensagem personalizada para o cliente com item, quantidade, entrega e valor.</p>
+              <button type="button" onclick="abrirPrimeiroPendente()">Enviar primeiro pendente</button>
+            </article>
+            <article class="automation-card">
+              <h3>Recompra de sexta-feira</h3>
+              <p>Identifica clientes recorrentes e prepara uma mensagem perguntando se desejam encomendar para a próxima semana.</p>
+              <button type="button" onclick="gerarRecomprasWhatsApp()">Ver clientes para chamar</button>
+            </article>
+            <article class="automation-card">
+              <h3>Retomar contato</h3>
+              <p>Mostra clientes que ficaram 25 dias sem comprar e prepara uma mensagem delicada para reativar o contato.</p>
+              <button type="button" onclick="gerarSaudadesWhatsApp()">Ver clientes em pausa</button>
+            </article>
+            <article class="automation-card">
+              <h3>Resumo operacional</h3>
+              <p>Cria um resumo com produção, faturamento e pendências para enviar à equipe.</p>
+              <button type="button" onclick="gerarResumoWhatsApp()">Abrir resumo</button>
+            </article>
+            <article class="automation-card">
+              <h3>Lista de compras</h3>
+              <p>Separa automaticamente os itens que ainda faltam comprar.</p>
+              <button type="button" onclick="enviarComprasWhatsApp()">Enviar lista</button>
+            </article>
+            <article class="automation-card">
+              <h3>Pagamento pendente</h3>
+              <p>Localiza o primeiro pedido em aberto e prepara uma cobrança gentil no WhatsApp.</p>
+              <button type="button" onclick="enviarPrimeiroPagamentoPendente()">Enviar lembrete</button>
+            </article>
+            <article class="automation-card">
+              <h3>Pós-venda</h3>
+              <p>Abre uma mensagem carinhosa para pedir feedback de quem já recebeu a marmita.</p>
+              <button type="button" onclick="enviarPrimeiroPosVenda()">Pedir feedback</button>
+            </article>
+            <article class="automation-card">
+              <h3>Backup local</h3>
+              <p>Baixa um arquivo JSON com pedidos, cardápio, compras e configurações.</p>
+              <button type="button" onclick="exportarBackup()">Baixar backup</button>
+            </article>
+          </div>
+
+          <div class="automation-settings">
+            <h3>Configuração da automação de recompra</h3>
+            <div class="form-grid">
+              <label>Quantidade mínima para lembrete
+                <input id="minimoRecompra" type="number" min="1" value="5" />
+              </label>
+              <label>Dia do lembrete
+                <select id="diaRecompra">
+                  <option value="5">Sexta-feira</option>
+                  <option value="4">Quinta-feira</option>
+                  <option value="6">Sábado</option>
+                </select>
+              </label>
+              <label>Horário
+                <input id="horaRecompra" type="time" value="19:00" />
+              </label>
+              <button class="primary" type="button" onclick="salvarAutomacoes()">Salvar automação</button>
+            </div>
+            <div id="filaRecompra" class="order-list"></div>
+          </div>
+        </section>
+
+        <section id="admin" class="tab-page">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Área da Dona Núbia</span>
+              <h2>Painel administrativo</h2>
+            </div>
+            <button class="ghost compact" type="button" onclick="sairAdmin()">Bloquear</button>
+          </div>
+
+          <div id="adminLogin" class="admin-login">
+            <img src="assets/logo-nubia.png" alt="Logo Marmitas da Núbia">
+            <h3>Entrar como administradora</h3>
+            <p>Use o PIN local para liberar os indicadores e atalhos de gestão.</p>
+            <form id="formAdmin">
+              <input id="adminPin" type="password" placeholder="PIN da Dona Núbia" required />
+              <button class="primary" type="submit">Entrar</button>
+            </form>
+            <small>PIN inicial: 2026. Troque quando formos para login real com backend seguro.</small>
+          </div>
+
+          <div id="adminDashboard" class="admin-dashboard hidden">
+            <section class="metrics-grid">
+              <article class="metric-card"><span>Pedidos totais</span><strong id="adminPedidos">0</strong><small>histórico</small></article>
+              <article class="metric-card"><span>Clientes</span><strong id="adminClientes">0</strong><small>base cadastrada</small></article>
+              <article class="metric-card"><span>Pratos</span><strong id="adminPratos">0</strong><small>catálogo</small></article>
+              <article class="metric-card warning"><span>Banco</span><strong id="adminBanco">Local</strong><small id="adminBackendStatus">verificando...</small></article>
+            </section>
+
+            <div class="admin-grid">
+              <article class="automation-card">
+                <h3>Atalhos de operação</h3>
+                <button type="button" onclick="trocarAba('pedidos')">Ver pedidos</button>
+                <button type="button" onclick="trocarAba('entregas')">Ver entregas</button>
+                <button type="button" onclick="trocarAba('financeiro')">Ver financeiro</button>
+              </article>
+              <article class="automation-card order-receiver">
+                <h3>Central de pedidos novos</h3>
+                <p>Deixe esta área aberta no celular para tocar quando chegar pedido novo.</p>
+                <button type="button" onclick="ativarCentralPedidos()">Ativar som da central</button>
+                <div id="centralPedidosNovos" class="alert-list"></div>
+              </article>
+              <article class="automation-card kitchen-mode span-2">
+                <div class="kitchen-head">
+                  <div>
+                    <span class="eyebrow">Modo cozinha</span>
+                    <h3>Recebimento de pedidos em tempo real</h3>
+                  </div>
+                  <button type="button" onclick="ativarCentralPedidos()">Ativar toque</button>
+                </div>
+                <div class="kitchen-columns">
+                  <div>
+                    <strong>Novos</strong>
+                    <div id="cozinhaNovos" class="kitchen-list"></div>
+                  </div>
+                  <div>
+                    <strong>Em preparo</strong>
+                    <div id="cozinhaPreparo" class="kitchen-list"></div>
+                  </div>
+                  <div>
+                    <strong>Prontos</strong>
+                    <div id="cozinhaProntos" class="kitchen-list"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="automation-card whatsapp-settings">
+                <h3>WhatsApp da Núbia</h3>
+                <p>Esse número recebe os pedidos feitos na aba Comprar.</p>
+                <form id="formConfiguracoesWhatsApp" class="mini-form">
+                  <label>Número com DDD
+                    <input id="whatsappDonaNubia" placeholder="Ex.: 61999999999" />
+                  </label>
+                  <button type="submit">Salvar WhatsApp</button>
+                </form>
+                <small id="whatsappStatus">Nenhum número configurado ainda.</small>
+                <button type="button" onclick="testarWhatsAppAutomatico()">Testar envio automático</button>
+                <small>Para o botão 1 aceitar sozinho, configure o webhook público em /api/whatsapp/webhook.</small>
+                <div id="whatsappApiStatus" class="alert-list"></div>
+              </article>
+              <article class="automation-card">
+                <h3>Dados e segurança</h3>
+                <p>O backend local salva os dados em JSON. Para multiusuário real, o próximo passo é autenticação e banco em nuvem.</p>
+                <button type="button" onclick="sincronizarBackendAgora()">Sincronizar agora</button>
+                <button type="button" onclick="exportarBackup()">Baixar backup</button>
+              </article>
+              <article class="automation-card">
+                <h3>Resumo rápido</h3>
+                <div id="adminResumo" class="alert-list"></div>
+              </article>
+              <article class="automation-card admin-monitor">
+                <h3>Monitor diário de promoções</h3>
+                <p>Acompanha itens importantes e registra quando a IA pesquisou preços nos mercados.</p>
+                <button type="button" onclick="rodarMonitorPromocoes()">Rodar monitor agora</button>
+                <div id="adminMonitorPromos" class="alert-list"></div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Marmitas da Núbia</span>
+    <span>Deliciosa • Caseira • Comida com afeto</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
